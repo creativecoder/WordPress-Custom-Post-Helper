@@ -1,4 +1,6 @@
-# Numerous always-ignore extensions
+# Always-ignore extensions #
+############################
+*.bak
 *.diff
 *.err
 *.orig
@@ -6,12 +8,23 @@
 *.rej
 *.swo
 *.swp
+*.zip
 *.vi
 *~
+*.un~
 *.sass-cache
 
-# OS or Editor folders
-.DS_Store
+# OS generated files #
+######################
+*~
+.svn
+.cvs
+.DS_Store*
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
 Thumbs.db
 .cache
 .project
@@ -19,25 +32,16 @@ Thumbs.db
 .tmproj
 *.esproj
 nbproject
-*.sublime-project
-*.sublime-workspace
+*.sublime*
 
-# Dreamweaver added files
-_notes
-dwsync.xml
-
-# Komodo
-*.komodoproject
-.komodotools
-
-# Folders to ignore
+# Folders to ignore #
+#####################
 .hg
 .svn
 .CVS
-intermediate
-publish
 .idea
-
-# build script local files
-build/buildinfo.properties
-build/config/buildinfo.properties
+node_modules
+dist
+.rvmrc
+.vagrant
+vendor
