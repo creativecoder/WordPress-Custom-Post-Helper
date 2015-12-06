@@ -1,0 +1,12 @@
+{
+    "name": "creativecoder/wp-custom-post-types",
+    "description": "Helper for registering custom post types and taxonomies in WordPress",
+    "license": "GPL-2.0+",
+    "authors": [
+        {
+            "name": "Grant Kinney",
+            "email": "hi@grant.mk"
+        }
+    ],
+    "require": {}
+}
