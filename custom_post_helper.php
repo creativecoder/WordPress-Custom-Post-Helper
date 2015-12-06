@@ -18,23 +18,20 @@
  * Custom post type class
  */
 
-class Custom_Post_Type
-{
+class Custom_Post_Type {
 	public $post_type_name;
 	public $post_type_args;
 	public $post_type_labels;
 
 	/* Class constructor */
-	public function __construct( $name, $args = array(), $labels = array() )
-	{
+	public function __construct( $name, $args = array(), $labels = array() ) {
 		// Set some important variables
-		$this->post_type_name		= self::uglify( $name );
-		$this->post_type_args 	= $args;
+		$this->post_type_name   = self::uglify( $name );
+		$this->post_type_args   = $args;
 		$this->post_type_labels = $labels;
 
-		// Add action to register the post type, if the post type doesnt exist
-		if( !post_type_exists( $this->post_type_name ) )
-		{
+		// Add action to register the post type, if the post type doesn't exist
+		if ( !post_type_exists( $this->post_type_name ) ) {
 			add_action( 'init', array( &$this, 'register_post_type' ) );
 
 			// Add custom messages
@@ -43,12 +40,11 @@ class Custom_Post_Type
 	}
 
 	/* Method which registers the post type */
-	public function register_post_type()
-	{
-		//Capitilize the words and make it plural
-		$name	 	= self::beautify( $this->post_type_name );
-		$plural	= self::pluralize( $name );
-		$slug	 	= self::slugify( $this->post_type_name );
+	public function register_post_type() {
+		// Capitalize the words and make it plural
+		$name   = self::beautify( $this->post_type_name );
+		$plural = self::pluralize( $name );
+		$slug   = self::slugify( $this->post_type_name );
 
 		// We set the default labels based on the post type name and plural. We overwrite them with the given labels.
 		$labels = array_merge(
@@ -64,8 +60,8 @@ class Custom_Post_Type
 				'all_items'          => __( 'All ' . $plural ),
 				'view_item'          => __( 'View ' . $name ),
 				'search_items'       => __( 'Search ' . $plural ),
-				'not_found'          => __( 'No ' . $plural . ' found'),
-				'not_found_in_trash' => __( 'No ' . $plural . ' found in Trash'), 
+				'not_found'          => __( 'No ' . $plural . ' found' ),
+				'not_found_in_trash' => __( 'No ' . $plural . ' found in Trash' ), 
 				'parent_item_colon'  => '',
 				'menu_name'          => $plural
 			),
@@ -86,9 +82,9 @@ class Custom_Post_Type
 				'show_ui'           => true,
 				'supports'          => array( 'title', 'editor' ),
 				'show_in_nav_menus' => true,
-				'has_archive'				=> true,
-				'rewrite'						=> array( 'slug' => $slug ),
-				'_builtin'					=> false,
+				'has_archive'       => true,
+				'rewrite'           => array( 'slug' => $slug ),
+				'_builtin'          => false,
 			),
 
 			// Given args
@@ -101,12 +97,11 @@ class Custom_Post_Type
 	}
 	
 	/* Method to add customized messages upon actions made to custom posts */
-	public function set_messages( $messages )
-	{
+	public function set_messages( $messages ) {
 		// Get post object and post ID
 		global $post, $post_ID;
 		
-		//Capitilize the words and make it plural
+		// Capitalize the words and make it plural
 		$name 	= self::beautify( $this->post_type_name );
 		
 		$messages[$this->post_type_name] = array(
@@ -121,25 +116,23 @@ class Custom_Post_Type
 			8 => sprintf( __( $name . ' submitted. <a target="_blank" href="%s">Preview ' . strtolower( $name ) . '</a>' ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
 			9 => sprintf( __( $name . ' scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview ' . strtolower( $name ) . '</a>'), date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink( $post_ID ) ) ),
 			10 => sprintf( __( $name . ' draft updated. <a target="_blank" href="%s">Preview ' . strtolower( $name ) . '</a>'), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
-			);
-			return $messages;
+		);
+
+		return $messages;
 	}
 
 	/* Method to attach the taxonomy to the post type */
-	public function add_taxonomy( $name, $args = array(), $labels = array() )
-	{
-		if( ! empty( $name ) )
-		{
+	public function add_taxonomy( $name, $args = array(), $labels = array() ) {
+		if ( $name ) {
 			// We need to know the post type name, so the new taxonomy can be attached to it.
 			$post_type_name = $this->post_type_name;
 
 			// Taxonomy properties
-			$taxonomy_name			= self::uglify( $name );
-			$taxonomy_labels		= $labels;
-			$taxonomy_args			= $args;
+			$taxonomy_name   = self::uglify( $name );
+			$taxonomy_labels = $labels;
+			$taxonomy_args   = $args;
 
-			if( ! taxonomy_exists( $taxonomy_name ) )
-			{
+			if ( ! taxonomy_exists( $taxonomy_name ) ) {
 				//Capitilize the words and make it plural
 				$name		= self::beautify( $name );
 				$plural	= self::pluralize( $name );
@@ -147,17 +140,17 @@ class Custom_Post_Type
 				$labels = array_merge(
 					// Default
 					array(
-						'name'							=> _x( $plural, 'taxonomy general name' ),
-						'singular_name'			=> _x( $name, 'taxonomy singular name' ),
-						'search_items'			=> __( 'Search ' . $plural ),
-						'all_items'					=> __( 'All ' . $plural ),
-						'parent_item'				=> __( 'Parent ' . $name ),
-						'parent_item_colon'	=> __( 'Parent ' . $name . ':' ),
-						'edit_item'					=> __( 'Edit ' . $name ), 
-						'update_item'				=> __( 'Update ' . $name ),
-						'add_new_item'			=> __( 'Add New ' . $name ),
-						'new_item_name'			=> __( 'New ' . $name . ' Name' ),
-						'menu_name'					=> __( $name ),
+						'name'              => _x( $plural, 'taxonomy general name' ),
+						'singular_name'     => _x( $name, 'taxonomy singular name' ),
+						'search_items'      => __( 'Search ' . $plural ),
+						'all_items'         => __( 'All ' . $plural ),
+						'parent_item'       => __( 'Parent ' . $name ),
+						'parent_item_colon' => __( 'Parent ' . $name . ':' ),
+						'edit_item'         => __( 'Edit ' . $name ), 
+						'update_item'       => __( 'Update ' . $name ),
+						'add_new_item'      => __( 'Add New ' . $name ),
+						'new_item_name'     => __( 'New ' . $name . ' Name' ),
+						'menu_name'         => __( $name ),
 					),
 
 					// Given labels
@@ -170,12 +163,12 @@ class Custom_Post_Type
 
 					// Default
 					array(
-						'label'									=> $plural,
-						'labels'								=> $labels,
-						'public'								=> true,
-						'show_ui'								=> true,
-						'show_in_nav_menus'			=> true,
-						'_builtin'							=> false,
+						'label'             => $plural,
+						'labels'            => $labels,
+						'public'            => true,
+						'show_ui'           => true,
+						'show_in_nav_menus' => true,
+						'_builtin'          => false,
 					),
 	
 					// Given
@@ -184,18 +177,12 @@ class Custom_Post_Type
 				);
 
 				// Add the taxonomy to the post type
-				add_action( 'init',
-					function() use( $taxonomy_name, $post_type_name, $args )
-					{
+				add_action( 'init', function() use( $taxonomy_name, $post_type_name, $args ) {
 						register_taxonomy( $taxonomy_name, $post_type_name, $args );
 					}
 				);
-			}
-			else
-			{
-				add_action( 'init',
-					function() use( $taxonomy_name, $post_type_name )
-					{
+			} else {
+				add_action( 'init', function() use( $taxonomy_name, $post_type_name ) {
 						register_taxonomy_for_object_type( $taxonomy_name, $post_type_name );
 					}
 				);
@@ -203,39 +190,32 @@ class Custom_Post_Type
 		}
 	}
 
-	public static function beautify( $string )
-	{
+	public static function beautify( $string ) {
 		return ucwords( str_replace( '_', ' ', $string ) );
 	}
 	
-	public static function uglify( $string )
-	{
+	public static function uglify( $string ) {
 		return strtolower( str_replace( ' ', '_', $string ) );
 	}
 
-	public static function pluralize( $string )
-	{
-		$last = substr($string, -1);
-		$nextlast = substr($string, -2, 1);
-		$vowel = array('a', 'e', 'i', 'o', 'u');
+	public static function pluralize( $string ) {
+		$last = substr( $string, -1 );
+		$nextlast = substr( $string, -2, 1 );
+		$vowel = array( 'a', 'e', 'i', 'o', 'u' );
 
-		if ( $last == 'y' && ! in_array( $nextlast, $vowel ) )
-		{
+		if ( $last == 'y' && ! in_array( $nextlast, $vowel ) ) {
 			$cut = substr( $string, 0, -1 );
 			// remove "y" and add "ies"
 			$plural = $cut . 'ies';
-		}
-		else
-		{
+		} else {
 			// just attach an s
 			$plural = $string . 's';
 		}
 
-	return $plural;
+		return $plural;
 	}
 	
-	public static function slugify( $string )
-	{
+	public static function slugify( $string ) {
 		$string = strtolower( str_replace( '_', '-', $string ) );
 		
 		return self::pluralize( $string );
