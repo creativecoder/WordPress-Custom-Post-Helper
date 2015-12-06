@@ -1,29 +1,38 @@
 <?php
-
 /**
- * Create and register custom post types
+ * Create and register custom post types and taxonomies
+ *
+ * Example: `$post = new Custom_Post_Type( $name, $args, $labels );`
  *
  * @package WordPress
- *
- ** Use WP Alchemy class for custom metaboxes
- */
- 
-/*
- * Register custom post types
- */
- 
-// $post = new Custom_Post_Type( $name, $args, $labels );
-
-/* 
- * Custom post type class
  */
 
 class Custom_Post_Type {
+	/**
+	 * Programatic name of post type
+	 * @var string
+	 */
 	public $post_type_name;
+
+	/**
+	 * Post type settings
+	 * @var array
+	 */
 	public $post_type_args;
+
+	/**
+	 * Post type labels
+	 * @var array
+	 */
 	public $post_type_labels;
 
-	/* Class constructor */
+	/**
+	 * Create a new custom post type
+	 *
+	 * @param string $name
+	 * @param array  $args   Settings
+	 * @param array  $labels
+	 */
 	public function __construct( $name, $args = array(), $labels = array() ) {
 		// Set some important variables
 		$this->post_type_name   = self::uglify( $name );
@@ -39,7 +48,10 @@ class Custom_Post_Type {
 		}
 	}
 
-	/* Method which registers the post type */
+	/**
+	 * Register the custom post type
+	 * @return void
+	 */
 	public function register_post_type() {
 		// Capitalize the words and make it plural
 		$name   = self::beautify( $this->post_type_name );
@@ -61,7 +73,7 @@ class Custom_Post_Type {
 				'view_item'          => __( 'View ' . $name ),
 				'search_items'       => __( 'Search ' . $plural ),
 				'not_found'          => __( 'No ' . $plural . ' found' ),
-				'not_found_in_trash' => __( 'No ' . $plural . ' found in Trash' ), 
+				'not_found_in_trash' => __( 'No ' . $plural . ' found in Trash' ),
 				'parent_item_colon'  => '',
 				'menu_name'          => $plural
 			),
@@ -96,7 +108,12 @@ class Custom_Post_Type {
 		register_post_type( $this->post_type_name, $args );
 	}
 	
-	/* Method to add customized messages upon actions made to custom posts */
+	/**
+	 * Custom status messages in wp-admin using post type name
+	 *
+	 * @param array $messages Set of status messages for actions on a post (updating, scheduling, etc)
+	 * @return array          Filtered array of messages
+	 */
 	public function set_messages( $messages ) {
 		// Get post object and post ID
 		global $post, $post_ID;
@@ -121,7 +138,13 @@ class Custom_Post_Type {
 		return $messages;
 	}
 
-	/* Method to attach the taxonomy to the post type */
+	/**
+	 * Associate a taxonomy to the custom post type
+	 *
+	 * @param string $name   Name of taxonomy to add
+	 * @param array  $args   Settings for the taxonomy, used if it isn't a built in taxonomy and hasn't already been registered
+	 * @param array  $labels Labels for the taxonomy, used if it isn't a built in taxonomy and hasn't already been registered
+	 */
 	public function add_taxonomy( $name, $args = array(), $labels = array() ) {
 		if ( $name ) {
 			// We need to know the post type name, so the new taxonomy can be attached to it.
@@ -190,14 +213,32 @@ class Custom_Post_Type {
 		}
 	}
 
+	/**
+	 * Convert text string to be human readable (convert `_` to spaces)
+	 * 
+	 * @param  string $string Text to beautify
+	 * @return string         Beautified text
+	 */
 	public static function beautify( $string ) {
 		return ucwords( str_replace( '_', ' ', $string ) );
 	}
 	
+	/**
+	 * Convert text string to be program readable
+	 *
+	 * @param  string $string Text to uglify
+	 * @return string         Uglified text
+	 */
 	public static function uglify( $string ) {
 		return strtolower( str_replace( ' ', '_', $string ) );
 	}
 
+	/**
+	 * Convert word into plural form
+	 *
+	 * @param  string $string Singular text
+	 * @return string         Plural text
+	 */
 	public static function pluralize( $string ) {
 		$last = substr( $string, -1 );
 		$nextlast = substr( $string, -2, 1 );
@@ -214,11 +255,16 @@ class Custom_Post_Type {
 
 		return $plural;
 	}
-	
+
+	/**
+	 * Convert text to be used in uri (convert `_` to `-` and pluralize it)
+	 *
+	 * @param  string $string Programatic text
+	 * @return string         Text for uri
+	 */
 	public static function slugify( $string ) {
 		$string = strtolower( str_replace( '_', '-', $string ) );
 		
 		return self::pluralize( $string );
 	}
-
 }
