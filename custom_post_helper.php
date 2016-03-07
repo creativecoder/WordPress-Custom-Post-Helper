@@ -145,20 +145,150 @@ class Custom_Post_Type {
 
 		);
 
-		// Same principle as the labels. We set some default and overwite them with the given arguments.
+		// Same principle as the labels. We set some default and overwrite them with the given arguments.
 		$args = array_merge(
 
 			// Default
 			array(
-				'label'             => $plural,
-				'labels'            => $labels,
-				'public'            => true,
-				'show_ui'           => true,
-				'supports'          => array( 'title', 'editor' ),
-				'show_in_nav_menus' => true,
-				'has_archive'       => true,
-				'rewrite'           => array( 'slug' => $slug ),
-				'_builtin'          => false,
+				// A plural descriptive name for the post type marked for translation.
+				// Default: Value of $labels['name']
+				// 'label' => $labels['name'],
+
+				// An array of labels for this post type. By default, post labels are used for non-hierarchical post types and page labels for hierarchical ones.
+				// Default: if empty, 'name' is set to value of 'label', and 'singular_name' is set to value of 'name'.
+				'labels' => $labels,
+
+				// A short descriptive summary of what the post type is.
+				// Default: blank
+				// 'description'       => '',
+
+				// Controls how the type is visible to authors (show_in_nav_menus, show_ui) and readers (exclude_from_search, publicly_queryable).
+				// Default: false
+				'public' => true,
+
+				// Whether to exclude posts with this post type from front end search results.
+				// Default: value of the opposite of public argument
+				// 'exclude_from_search' => false,
+
+				// Whether queries can be performed on the front end as part of parse_request().
+				// Default: value of public argument
+				// 'publicly_queryable' => true,
+
+				// Whether to generate a default UI for managing this post type in the admin.
+				// Default: value of public argument
+				// 'show_ui'           => true,
+
+				// Whether post_type is available for selection in navigation menus.
+				// Default: value of public argument
+				// 'show_in_nav_menus' => true,
+
+				// Where to show the post type in the admin menu. show_ui must be true.
+				// Default: value of show_ui argument
+				// 'show_in_menu' => true,
+
+				// Whether to make this post type available in the WordPress admin bar.
+				// Default: value of the show_in_menu argument
+				// 'show_in_admin_bar' => true,
+
+				// The position in the menu order the post type should appear. show_in_menu must be true.
+				// Default: null - defaults to below Comments
+				// 'menu_position'     => null,
+
+				// The url to the icon to be used for this menu or the name of the icon from the iconfont [1]
+				// Default: null - defaults to the posts icon
+				// 'menu_icon'         => null,
+
+				// The string to use to build the read, edit, and delete capabilities. Use an array to specify singular and plural.
+				// Default: "post"
+				// 'capability_type' => array( strtolower( $name ), strtolower( $plural ) ),
+
+				// An array of the capabilities for this post type.
+				// Default: capability_type is used to construct
+				// 'capabilities'      => array(
+				// 	'edit_post'              =>              'edit_' . strtolower( $name ),
+				// 	'read_post'              =>              'read_' . strtolower( $name ),
+				// 	'delete_post'            =>            'delete_' . strtolower( $name ),
+				// 	'edit_posts'             =>             'edit_' . strtolower( $plural ),
+				// 	'edit_others_posts'      =>      'edit_others_' . strtolower( $plural ),
+				// 	'publish_posts'          =>          'publish_' . strtolower( $plural ),
+				// 	'read_private_posts'     =>     'read_private_' . strtolower( $plural ),
+				// 	'delete_posts'           =>           'delete_' . strtolower( $plural ),
+				// 	'delete_private_posts'   =>   'delete_private_' . strtolower( $plural ),
+				// 	'delete_published_posts' => 'delete_published_' . strtolower( $plural ),
+				// 	'delete_others_posts'    =>    'delete_others_' . strtolower( $plural ),
+				// 	'edit_private_posts'     =>     'edit_private_' . strtolower( $plural ),
+				// 	'edit_published_posts'   =>   'edit_published_' . strtolower( $plural ),
+				// 	'create_posts'           =>           'create_' . strtolower( $plural ),
+				// ),
+
+				// Whether to use the internal default meta capability handling.
+				// Default: null
+				// 'map_meta_cap' => true,
+
+				// Whether the post type is hierarchical (e.g. page). Allows Parent to be specified. The 'supports' parameter should contain 'page-attributes' to show the parent select box on the editor page.
+				// Default: false
+				// 'hierarchical' => false,
+
+				// An alias for calling add_post_type_support() directly. As of 3.5, boolean false can be passed as value instead of an array to prevent default (title and editor) behavior.
+				// Default: title and editor
+				// 'supports' => array( 'title', 'editor' ),
+
+				// Provide a callback function that will be called when setting up the meta boxes for the edit form. The callback function takes one argument $post, which contains the WP_Post object for the currently edited post. Do remove_meta_box() and add_meta_box() calls in the callback.
+				// Default: None
+				// 'register_meta_box_cb' => null,
+
+				// An array of registered taxonomies like category or post_tag that will be used with this post type. This can be used in lieu of calling register_taxonomy_for_object_type() directly. Custom taxonomies still need to be registered with register_taxonomy().
+				// Default: no taxonomies
+				// 'taxonomies' => null,
+
+				// Enables post type archives. Will use $post_type as archive slug by default.
+				// Default: false
+				'has_archive' => true,
+
+				// Triggers the handling of rewrites for this post type. To prevent rewrites, set to false.
+				// Default: true and use $post_type as slug
+				'rewrite' => array(
+					// Customize the permalink structure slug. Defaults to the $post_type value. Should be translatable.
+					'slug' => sprintf( _x( '%s', 'custom post type slug for url', 'custom-post-helper' ), $slug ),
+
+					// Should the permalink structure be prepended with the front base. (example: if your permalink structure is /blog/, then your links will be: false->/news/, true->/blog/news/). Defaults to true
+					// 'with_front' => true,
+
+					// Should a feed permalink structure be built for this post type. Defaults to has_archive value.
+					// 'feeds' => true,
+
+					// Should the permalink structure provide for pagination. Defaults to true
+					// 'pages' => true,
+
+					// Assign an endpoint mask for this post type.
+					// 'ep_mask' => null,
+				),
+
+				// Sets the query_var key for this post type.
+				// Default: true - set to $post_type
+				// 'query_var' => $slug,
+
+				//  Can this post_type be exported.
+				// Default: true
+				// 'can_export' => true,
+
+				// Whether to expose this post type in the REST API.
+				// Default: false
+				// 'show_in_rest' => false,
+
+				// The base slug that this post type will use when accessed using the REST API.
+				// Default: $post_type
+				// 'rest_base' => $slug,
+
+				// An optional custom controller to use instead of WP_REST_Posts_Controller. Must be a subclass of WP_REST_Controller.
+				// Default: WP_REST_Posts_Controller
+				// 'rest_controller_class' => 'WP_REST_Posts_Controller',
+
+				// Whether this post type is a native or "built-in" post_type. Note: this Codex entry is for documentation - core developers recommend you don't use this when registering your own post type
+				// '_builtin' => false,
+
+				// Link to edit an entry with this post type. Note: this Codex entry is for documentation - core developers recommend you don't use this when registering your own post type
+				// '_edit_link' => 'post.php?post=%d',
 			),
 
 			// Given args
@@ -310,12 +440,93 @@ class Custom_Post_Type {
 
 					// Default
 					array(
-						'label'             => $plural,
+						// A plural descriptive name for the taxonomy marked for translation.
+						// Default: overridden by $labels->name
+						// 'label'             => $labels['name'],
+
+						//  An array of labels for this taxonomy. By default tag labels are used for non-hierarchical types and category labels for hierarchical ones.
+						// Default: if empty, name is set to label value, and singular_name is set to name value
 						'labels'            => $labels,
-						'public'            => true,
-						'show_ui'           => true,
-						'show_in_nav_menus' => true,
-						'_builtin'          => false,
+
+						// If the taxonomy should be publicly queryable.
+						// Default: true
+						// 'public'            => true,
+
+						// Whether to generate a default UI for managing this taxonomy.
+						// Default: if not set, defaults to value of public argument. As of 3.5, setting this to false for attachment taxonomies will hide the UI.
+						// 'show_ui'           => true,
+						
+						// Where to show the taxonomy in the admin menu. show_ui must be true.
+						// Default: value of show_ui argument
+						// 'show_in_nav_menus' => true,
+
+						// True makes this taxonomy available for selection in navigation menus.
+						// Default: if not set, defaults to value of public argument
+						// 'show_in_nav_menus' => true,
+						
+						// Whether to allow the Tag Cloud widget to use this taxonomy.
+						// Default: if not set, defaults to value of show_ui argument
+						// 'show_tagcloud' => true,
+
+						// Whether to show the taxonomy in the quick/bulk edit panel. (Available since 4.2)
+						// Default: if not set, defaults to value of show_ui argument
+						// 'show_in_quick_edit' => true,
+
+						// Provide a callback function name for the meta box display. (Available since 3.8)
+						// Default: null
+						// 'meta_box_cb' => null,
+
+						// Whether to allow automatic creation of taxonomy columns on associated post-types table. (Available since 3.5)
+						// Default: false
+						// 'show_admin_column' => false,
+
+						//  Include a description of the taxonomy.
+						// Default: ""
+						// 'description' => '',
+						
+						// Is this taxonomy hierarchical (have descendants) like categories or not hierarchical like tags.
+						// Default: false
+						// 'hierarchical' => false,
+						
+						// A function name that will be called when the count of an associated $object_type, such as post, is updated. Works much like a hook.
+						// Default: None - but see Note, below.
+						// 'update_count_callback' => '',
+
+						// False to disable the query_var, set as string to use custom query_var instead of default which is $taxonomy, the taxonomy's "name".
+						// Default: $taxonomy
+						// 'query_var' => $slug,
+
+						// Set to false to prevent automatic URL rewriting a.k.a. "pretty permalinks". Pass an $args array to override default URL settings for permalinks as outlined below:
+						// Default: true
+						'rewrite' => array(
+							//  Used as pretty permalink text (i.e. /tag/) - defaults to $taxonomy (taxonomy's name slug)
+							'slug' => sprintf( _x( '%s', 'taxonomy slug for url', 'custom-post-helper' ), $slug ),
+
+							// Allowing permalinks to be prepended with front base - defaults to true
+							// 'with_front' => true,
+
+							// true or false allow hierarchical urls (implemented in Version 3.1) - defaults to false
+							// 'hierarchical' => false,
+
+							// Assign an endpoint mask for this post type.
+							// 'ep_mask' => null,
+						),
+
+						// An array of the capabilities for this taxonomy.
+						// Default: None
+						// 'capabilities' => array(
+						// 	'assign_terms' => 'assign_' . $slug,
+						// 	'delete_terms' => 'delete_' . $slug,
+						// 	'edit_terms'   => 'edit_' . $slug,
+						// 	'manage_terms' => 'manage_' . $slug,
+						// ),
+
+						// Whether this taxonomy should remember the order in which terms are added to objects.
+						// Default: None
+						// 'sort' => false,
+
+						// Whether this taxonomy is a native or "built-in" taxonomy. Note: this Codex entry is for documentation - core developers recommend you don't use this when registering your own taxonomy
+						// '_builtin'          => false,
 					),
 	
 					// Given
@@ -366,9 +577,9 @@ class Custom_Post_Type {
 	public static function pluralize( $string ) {
 		$last = substr( $string, -1 );
 		$nextlast = substr( $string, -2, 1 );
-		$vowel = array( 'a', 'e', 'i', 'o', 'u' );
+		$vowels = array( 'a', 'e', 'i', 'o', 'u' );
 
-		if ( $last == 'y' && ! in_array( $nextlast, $vowel ) ) {
+		if ( $last == 'y' && ! in_array( $nextlast, $vowels ) ) {
 			$cut = substr( $string, 0, -1 );
 			// remove "y" and add "ies"
 			$plural = $cut . 'ies';
