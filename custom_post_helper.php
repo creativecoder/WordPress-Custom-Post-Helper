@@ -1,4 +1,16 @@
 <?php
+/*
+Plugin Name: Custom Post Type Helper
+Plugin URI:  https://github.com/creativecoder/WordPress-Custom-Post-Helper
+Description: Helper for creating custom post types
+Version:     0.2.1
+Author:      Grant Kinney
+Author URI:  https://grant.mk
+License:     GPL2
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: custom-post-helper
+*/
+
 /**
  * Create and register custom post types and taxonomies
  *
@@ -6,7 +18,6 @@
  *
  * @package WordPress
  */
-
 class Custom_Post_Type {
 	/**
 	 * Programatic name of post type
@@ -603,3 +614,25 @@ class Custom_Post_Type {
 		return self::pluralize( $string );
 	}
 }
+
+add_action( 'admin_init', function () {
+	include_once 'WordPress-Custom-Post-Helper/updater.php';
+
+	define( 'WP_GITHUB_FORCE_UPDATE', true );
+
+	$config = array(
+		'slug' => plugin_basename(__FILE__), // this is the slug of your plugin
+		'proper_folder_name' => 'custom_post_helper', // this is the name of the folder your plugin lives in
+		'api_url' => 'https://api.github.com/repos/creativecoder/WordPress-Custom-Post-Helper', // the GitHub API url of your GitHub repo
+		'raw_url' => 'https://raw.github.com/creativecoder/WordPress-Custom-Post-Helper/master', // the GitHub raw url of your GitHub repo
+		'github_url' => 'https://github.com/creativecoder/WordPress-Custom-Post-Helper', // the GitHub url of your GitHub repo
+		'zip_url' => 'https://github.com/creativecoder/WordPress-Custom-Post-Helper/zipball/master', // the zip url of the GitHub repo
+		'sslverify' => true, // whether WP should check the validity of the SSL cert when getting an update, see https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/2 and https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/4 for details
+		'requires' => '3.0', // which version of WordPress does your plugin require?
+		'tested' => '4.4', // which version of WordPress is your plugin tested up to?
+		'readme' => 'readme.md', // which file to use as the readme for the version number
+		'access_token' => '', // Access private repositories by authorizing under Appearance > GitHub Updates when this example plugin is installed
+	);
+
+	new WP_GitHub_Updater( $config );
+});
