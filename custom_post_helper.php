@@ -63,19 +63,81 @@ class Custom_Post_Type {
 
 			// Default
 			array(
-				'name'               => _x( $plural, 'post type general name' ),
-				'singular_name'      => _x( $name, 'post type singular name' ),
-				'add_new'            => _x( 'Add New', $name ),
-				'add_new_item'       => __( 'Add New ' . $name ),
-				'edit_item'          => __( 'Edit ' . $name ),
-				'new_item'           => __( 'New ' . $name ),
-				'all_items'          => __( 'All ' . $plural ),
-				'view_item'          => __( 'View ' . $name ),
-				'search_items'       => __( 'Search ' . $plural ),
-				'not_found'          => __( 'No ' . $plural . ' found' ),
-				'not_found_in_trash' => __( 'No ' . $plural . ' found in Trash' ),
-				'parent_item_colon'  => '',
-				'menu_name'          => $plural
+				// General name for the post type, usually plural. The same and overridden
+				// by $post_type_object->label. Default is Posts/Pages
+				'name'                  => sprintf( _x( '%s', 'post type general name', 'custom-post-helper' ), $plural ), 
+
+				// name for one object of this post type. Default is Post/Page
+				'singular_name'         => sprintf( _x( '%s', 'post type singular name', 'custom-post-helper' ), $name ),
+
+				// Default is Add New for both hierarchical and non-hierarchical types.
+				// When' internationalizing this string, please use a gettext context
+				// @link https://codex.wordpress.org/I18n_for_WordPress_Developers#Disambiguation_by_context}
+				// matching your post type. Example: `_x( 'Add New', 'product' );`.
+				'add_new'               => _x( 'Add New', 'add new custom post type', 'custom-post-helper' ),
+
+				// Default is Add New Post/Add New Page.
+				'add_new_item'          => sprintf( _x( 'Add New %s', 'add new custom post type', 'custom-post-helper' ), $name ),
+
+				// Default is Edit Post/Edit Page.
+				'edit_item'             => sprintf( _x( 'Edit %s', 'edit custom post type', 'custom-post-helper' ), $name ),
+
+				// Default is New Post/New Page.
+				'new_item'              => sprintf( _x( 'New %s', 'create new custom post type', 'custom-post-helper' ), $name ),
+
+				// Default is View Post/View Page.
+				'view_item'             => sprintf( _x( 'View %', 'view custom post type', 'custom-post-helper' ), $name ),
+
+				// Default is Search Posts/Search Pages.
+				'search_items'          => sprintf( _x( 'Search %s', 'search custom post type', 'custom-post-helper' ), $plural ),
+
+				// Default is No posts found/No pages found.
+				'not_found'             => sprintf( _x( 'No %s found', 'no custom post types found', 'custom-post-helper' ), $plural ),
+
+				// Default is No posts found in Trash/No pages found in Trash.
+				'not_found_in_trash'    => sprintf( _x( 'No %s found in Trash', 'no custom post types found', 'custom-post-helper' ), $plural ),
+
+				// This string isn't used on non-hierarchical types. In hierarchical ones the default is 'Parent Page:'.
+				'parent_item_colon'     => sprintf( _x( 'Parent %s', 'custom post type name', 'custom-post-helper' ), $name ),
+
+				// String for the submenu. Default is All Posts/All Pages.
+				'all_items'             => sprintf( _x( 'All %s', 'custom post type plural name', 'custom-post-helper' ), $plural ),
+
+				// String for use with archives in nav menus. Default is Post Archives/Page Archives.
+				'archives'              => sprintf( _x( '%s Archives', 'custom post type archives', 'custom-post-helper' ), $name ),
+
+				// String for the media frame button. Default is Insert into post/Insert into page.
+				'insert_into_item'      => sprintf( _x( 'Insert into %s', 'insert into custom post type', 'custom-post-helper' ), $name ),
+
+				// String for the media frame filter. Default is Uploaded to this post/Uploaded to this page.
+				'uploaded_to_this_item' => sprintf( _x( 'Uploaded to this %s', 'uploaded to custom post type', 'custom-post-helper' ), $name ),
+
+				// Default is Featured Image.
+				'featured_image'        => __( 'Featured Image', 'custom-post-helper' ),
+
+				// Default is Set featured image.
+				'set_featured_image'    => __( 'Set featured image', 'custom-post-helper' ),
+
+				// Default is Remove featured image.
+				'remove_featured_image' => __( 'Remove featured image', 'custom-post-helper' ),
+
+				// Default is Use as featured image.
+				'use_featured_image'    => __( 'Use as featured image', 'custom-post-helper' ),
+
+				// Default is the same as `name`.
+				'menu_name'             => sprintf( _x( '%s', 'post type plural name', 'custom-post-helper' ), $plural ),
+
+				// String for the table views hidden heading.
+				'filter_items_list'     => sprintf( _x( 'Filter %s list', 'filter custom post type list', 'custom-post-helper' ), $plural ),
+
+				// String for the table pagination hidden heading.
+				'items_list_navigation' => sprintf( _x( '$s list navigation', 'custom post type list navigation', 'custom-post-helper' ), $plural ),
+
+				// String for the table hidden heading.
+				'items_list'            => sprintf( _x( '%s list', 'custom post type list', 'custom-post-helper' ), $plural ),
+
+				// String for use in New in Admin menu bar. Default is the same as `singular_name`.
+				'name_admin_bar'        => _x( $name, 'post type singular name', 'custom-post-helper' ),
 			),
 
 			// Given labels
@@ -119,20 +181,24 @@ class Custom_Post_Type {
 		global $post, $post_ID;
 		
 		// Capitalize the words and make it plural
-		$name 	= self::beautify( $this->post_type_name );
+		$name = self::beautify( $this->post_type_name );
 		
 		$messages[$this->post_type_name] = array(
 			0 => '', // Unused. Messages start at index 1.
-			1 => sprintf( __( $name . ' updated. <a href="%s">View ' . strtolower( $name ) . '</a>' ),  esc_url( get_permalink( $post_ID ) ) ),
-			2 => __( 'Custom field updated.' ),
-			3 => __( 'Custom field deleted.' ),
-			4 => __( $name . ' updated.' ),
-			5 => isset( $_GET['revision'] ) ? sprintf( __($name . ' restored to revision from %s' ),  wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
-			6 => sprintf( __( $name . ' published. <a href="%s">View ' . strtolower( $name ) . '</a>'), esc_url( get_permalink( $post_ID ) ) ),
-			7 => __( 'Page saved.' ),
-			8 => sprintf( __( $name . ' submitted. <a target="_blank" href="%s">Preview ' . strtolower( $name ) . '</a>' ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
-			9 => sprintf( __( $name . ' scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview ' . strtolower( $name ) . '</a>'), date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink( $post_ID ) ) ),
-			10 => sprintf( __( $name . ' draft updated. <a target="_blank" href="%s">Preview ' . strtolower( $name ) . '</a>'), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
+			1 => sprintf(
+				__( '%1$s updated. <a href="%2$s">View %1$s</a>', 'custom-post-helper' ),
+				$name,
+				esc_url( get_permalink( $post_ID ) )
+			),
+			2 => __( 'Custom field updated.', 'custom-post-helper' ),
+			3 => __( 'Custom field deleted.', 'custom-post-helper' ),
+			4 => sprintf( _x( '%s updated.', 'custom post type updated', 'custom-post-helper' ), $name ),
+			5 => isset( $_GET['revision'] ) ? sprintf( __( '%s restored to revision from %s', 'custom-post-helper' ), $name, wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+			6 => sprintf( __( '%s published. <a href="%s">View %s</a>', 'custom-post-helper' ), $name, esc_url( get_permalink( $post_ID ) ), strtolower( $name ) ),
+			7 => sprintf( __( '%s saved.', 'custom-post-helper' ), $name ),
+			8 => sprintf( __( '%s submitted. <a target="_blank" href="%s">Preview %s</a>', 'custom-post-helper' ), $name, esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ), strtolower( $name ) ),
+			9 => sprintf( __( '%s scheduled for: <strong>%s</strong>. <a target="_blank" href="%s">Preview %s</a>', 'custom-post-helper' ), $name, date_i18n( __( 'M j, Y @ G:i', 'custom-post-helper' ), strtotime( $post->post_date ) ), esc_url( get_permalink( $post_ID ) ), strtolower( $name ) ),
+			10 => sprintf( __( '%s draft updated. <a target="_blank" href="%s">Preview %s</a>', 'custom-post-helper' ), $name, esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ), strtolower( $name ) ),
 		);
 
 		return $messages;
@@ -157,23 +223,81 @@ class Custom_Post_Type {
 
 			if ( ! taxonomy_exists( $taxonomy_name ) ) {
 				//Capitilize the words and make it plural
-				$name		= self::beautify( $name );
+				$name	= self::beautify( $name );
 				$plural	= self::pluralize( $name );
+
 				// Default labels, overwrite them with the given labels.
 				$labels = array_merge(
 					// Default
 					array(
-						'name'              => _x( $plural, 'taxonomy general name' ),
-						'singular_name'     => _x( $name, 'taxonomy singular name' ),
-						'search_items'      => __( 'Search ' . $plural ),
-						'all_items'         => __( 'All ' . $plural ),
-						'parent_item'       => __( 'Parent ' . $name ),
-						'parent_item_colon' => __( 'Parent ' . $name . ':' ),
-						'edit_item'         => __( 'Edit ' . $name ), 
-						'update_item'       => __( 'Update ' . $name ),
-						'add_new_item'      => __( 'Add New ' . $name ),
-						'new_item_name'     => __( 'New ' . $name . ' Name' ),
-						'menu_name'         => __( $name ),
+						// General name for the taxonomy, usually plural. The same as and overridden by $tax->label.
+						// Default is _x( 'Post Tags', 'taxonomy general name' ) or _x( 'Categories', 'taxonomy general name' ).
+						// When internationalizing this string, please use a gettext context matching your post type. Example: _x('Writers', 'taxonomy general name');
+						'name' => sprintf( _x( '%s', 'taxonomy general name', 'custom-post-helper' ), $plural ),
+
+						// Name for one object of this taxonomy.
+						// Default is _x( 'Post Tag', 'taxonomy singular name' ) or _x( 'Category', 'taxonomy singular name' ).
+						// When internationalizing this string, please use a gettext context matching your post type. Example: _x('Writer', 'taxonomy singular name');
+						'singular_name' => sprintf( _x( '%s', 'taxonomy singular name', 'custom-post-helper' ), $name ),
+
+						// The menu name text. This string is the name to give menu items. If not set, defaults to value of name label.
+						'menu_name' => sprintf( _x( '%s', 'taxonomy general name', 'custom-post-helper' ), $plural ),
+
+						// The all items text.
+						// Default is __( 'All Tags' ) or __( 'All Categories' )
+						'all_items' => sprintf( _x( 'All %s', 'all taxonomy terms', 'custom-post-helper' ), $plural ),
+
+						// the edit item text.
+						// Default is __( 'Edit Tag' ) or __( 'Edit Category' )
+						'edit_item' => sprintf( _x( 'Edit %s', 'edit taxonomy term', 'custom-post-helper' ), $name ),
+
+						// The view item text.
+						// Default is __( 'View Tag' ) or __( 'View Category' )
+						'view_item' => sprintf( _x( 'View %s', 'view taxonomy term', 'custom-post-helper' ), $name ),
+
+						// The update item text.
+						// Default is __( 'Update Tag' ) or __( 'Update Category' )
+						'update_item' => sprintf( _x( 'Update %s', 'taxonomy term', 'custom-post-helper'), $name ),
+
+						// The add new item text.
+						// Default is __( 'Add New Tag' ) or __( 'Add New Category' )
+						'add_new_item' => sprintf( _x( 'Add New %s', 'add new taxonomy term', 'custom-post-helper'), $name ),
+
+						// The new item name text.
+						// Default is __( 'New Tag Name' ) or __( 'New Category Name' )
+						'new_item_name' => sprintf( _x( 'New %s Name', 'taxonomy term', 'custom-post-helper'), $name ),
+						
+						// The parent item text. This string is not used on non-hierarchical taxonomies such as post tags.
+						// Default is null or __( 'Parent Category' )
+						'parent_item' => sprintf( _x( 'Parent %s', 'parent taxonomy term', 'custom-post-helper' ), $name ),
+						
+						// The same as parent_item, but with colon : in the end null, __( 'Parent Category:' )
+						'parent_item_colon' => sprintf( _x( 'Parent %s:', 'parent taxonomy term', 'custom-post-helper' ), $name ),
+
+						// The search items text.
+						// Default is __( 'Search Tags' ) or __( 'Search Categories' )
+						'search_items' => sprintf( _x( 'Search %s', 'search taxonomy', 'custom-post-helper' ), $plural ),
+
+						// The popular items text. This string is not used on hierarchical taxonomies.
+						// Default is __( 'Popular Tags' ) or null
+						'popular_items' => sprintf( _x( 'Popular %s', 'popular taxonomy terms', 'custom-post-helper' ), $plural ),
+
+						// The separate item with commas text used in the taxonomy meta box. This string is not used on hierarchical taxonomies.
+						// Default is __( 'Separate tags with commas' ), or null
+						'separate_items_with_commas' => sprintf( _x( 'Separate %s with commas', 'separate taxonomy terms with commas', 'custom-post-helper' ), strtolower( $plural ) ),
+						
+						// The add or remove items text and used in the meta box when JavaScript is disabled. This string is not used on hierarchical taxonomies.
+						// Default is __( 'Add or remove tags' ) or null
+						'add_or_remove_items' => sprintf( _x( 'Add or remove %s', 'add or remove taxonomy terms', 'custom-post-helper' ), strtolower( $plural ) ),
+
+						// the choose from most used text used in the taxonomy meta box. This string is not used on hierarchical taxonomies.
+						// Default is __( 'Choose from the most used tags' ) or null
+						'choose_from_most_used' => sprintf( _x( 'Choose from the most used %s', 'taxonomy terms', 'custom-post-helper' ), strtolower( $plural ) ),
+
+						// the text displayed via clicking 'Choose from the most used tags' in the taxonomy meta box when no tags are available and (4.2+) -
+						// the text used in the terms list table when there are no items for a taxonomy.
+						// Default is __( 'No tags found.' ) or __( 'No categories found.' )
+						'not_found' => sprintf( _x( 'No %s found.', 'taxonomy terms', 'custom-post-helper' ), strtolower( $plural ) ),
 					),
 
 					// Given labels
