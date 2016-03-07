@@ -4,17 +4,17 @@ This is a Custom Post type helper for WordPress to easily create custom post typ
 
 ## Install
 
-Include the class in your `functions.php` or drop it into your mu-plugins directory.
+Include the class in your `functions.php` or drop it into your `mu-plugins` directory.
 
 ## Usage
 
 To add a custom post type simply call the CP_Helper and pass a name
 
-	$car = new Custom_Post_Type( 'Car' );
+	$car = new Custom_Post_Type( 'car' );
 
 If you want to override defaults
 
-	$car = new CP_Helper( 'Car',
+	$car = new CP_Helper( 'car',
 				array( 'supports' => array( 'title', 'editor', 'excerpt' ) )
 	);
 
@@ -23,7 +23,3 @@ If you want to override defaults
 To add Custom Taxonomies, simply call the add_taxonomy.
 
 	$car->add_taxonomy( 'Model' );
-
-### Add Metaboxes
-
-Use [WPAlchemy Metabox class](http://www.farinspace.com/wpalchemy-metabox/)
