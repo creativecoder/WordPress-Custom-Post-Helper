@@ -3,7 +3,7 @@
 Plugin Name: Custom Post Type Helper
 Plugin URI:  https://github.com/creativecoder/WordPress-Custom-Post-Helper
 Description: Helper for creating custom post types
-Version:     0.2.6
+Version:     0.2.7
 Author:      Grant Kinney
 Author URI:  https://grant.mk
 License:     GPL2
@@ -366,6 +366,7 @@ class Custom_Post_Type {
 				//Capitilize the words and make it plural
 				$name	= self::beautify( $name );
 				$plural	= self::pluralize( $name );
+				$slug   = self::slugify( $name );
 
 				// Default labels, overwrite them with the given labels.
 				$labels = array_merge(
