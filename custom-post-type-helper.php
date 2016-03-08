@@ -3,7 +3,7 @@
 Plugin Name: Custom Post Type Helper
 Plugin URI:  https://github.com/creativecoder/WordPress-Custom-Post-Helper
 Description: Helper for creating custom post types
-Version:     0.2.5
+Version:     0.2.6
 Author:      Grant Kinney
 Author URI:  https://grant.mk
 License:     GPL2
@@ -142,7 +142,7 @@ class Custom_Post_Type {
 				'filter_items_list'     => sprintf( _x( 'Filter %s list', 'filter custom post type list', 'custom-post-helper' ), $plural ),
 
 				// String for the table pagination hidden heading.
-				'items_list_navigation' => sprintf( _x( '$s list navigation', 'custom post type list navigation', 'custom-post-helper' ), $plural ),
+				'items_list_navigation' => sprintf( _x( '%s list navigation', 'custom post type list navigation', 'custom-post-helper' ), $plural ),
 
 				// String for the table hidden heading.
 				'items_list'            => sprintf( _x( '%s list', 'custom post type list', 'custom-post-helper' ), $plural ),
