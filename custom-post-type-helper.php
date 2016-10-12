@@ -3,7 +3,7 @@
 Plugin Name: Custom Post Type Helper
 Plugin URI:  https://github.com/creativecoder/WordPress-Custom-Post-Helper
 Description: Helper for creating custom post types
-Version:     0.2.7
+Version:     0.2.8
 Author:      Grant Kinney
 Author URI:  https://grant.mk
 License:     GPL2
@@ -617,12 +617,10 @@ class Custom_Post_Type {
 }
 
 add_action( 'admin_init', function () {
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) { return; }
+
 	if ( ! class_exists('WP_GitHub_Updater') ) {
 		include_once( 'WordPress-GitHub-Plugin-Updater/updater.php' );
-	}
-
-	if ( ! defined( 'WP_GITHUB_FORCE_UPDATE' ) ) {
-		define( 'WP_GITHUB_FORCE_UPDATE', true );
 	}
 
 	$config = array(
